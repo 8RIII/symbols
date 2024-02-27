@@ -1,11 +1,25 @@
+#Input the relevant libraries
+import numpy as np
+import pandas as pd
+import streamlit as st
+import altair as alt
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.naive_bayes import BernoulliNB
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+
 # Define the Streamlit app
 def app():
     
     st.title('Symbol Classification')
     st.subheader('by Brien Mikael I. Aguirre., WVSU College of ICT')
-    st.write('The naive bayes classifier performs well on overlapped data.')
+    st.write('The naive bayes classifierperforms well on overlapped data.')
 
     st.write('Dataset description:')
+
     st.write('Number of features: 64')
     text = """Feature representation: Binary values (1 or 0) representing the 8x8 pixels of an image.
         Target variable: This could be a single categorical variable representing the class of the image (e.g., digit recognition, traffic sign classification).
@@ -30,22 +44,13 @@ def app():
 
     if st.button('Start'):
         df = pd.read_csv('symbols.csv', header=None)
-
+        # st.dataframe(df, use_container_width=True)  
+        
         # display the dataset
         st.header("Dataset")
         st.dataframe(df, use_container_width=True) 
 
-        # Visualize class distribution
-        st.header("Class Distribution")
-        class_counts = df.iloc[:, -1].value_counts()
-        plt.figure(figsize=(10, 6))
-        sns.barplot(x=class_counts.index, y=class_counts.values)
-        plt.xlabel('Class')
-        plt.ylabel('Count')
-        plt.title('Class Distribution')
-        st.pyplot()
-
-        # load the data and the labels
+        #load the data and the labels
         X = df.values[:,0:-1]
         y = df.values[:,-1]    
 
@@ -61,8 +66,8 @@ def app():
             # Display the image
             ax.imshow(np.reshape(image, (8, 8)), cmap='binary')
 
-            # Add the title
-            ax.set_title(f'Training: {label}', fontsize=10)
+        # Add the title
+        ax.set_title(f'Training: {label}', fontsize=10)
 
         # Tighten layout to avoid overlapping
         plt.tight_layout()
@@ -81,7 +86,20 @@ def app():
         st.header('Classification Report')
         # Test the classifier on the testing set
         st.text(classification_report(y_test, y_test_pred))
-    
+
+        # Display histogram
+        st.header('Histogram of Classes')
+        st.bar_chart(df.iloc[:, -1].value_counts())
+
+        # Display bar chart
+        st.header('Bar Chart of Class Distribution')
+        class_counts = df.iloc[:, -1].value_counts()
+        plt.bar(class_counts.index, class_counts.values)
+        plt.xlabel('Class')
+        plt.ylabel('Count')
+        plt.title('Class Distribution')
+        st.pyplot()
+        
 #run the app
 if __name__ == "__main__":
     app()
