@@ -94,12 +94,13 @@ def app():
         # Display bar chart
         st.header('Bar Chart of Class Distribution')
         class_counts = df.iloc[:, -1].value_counts()
-        plt.bar(class_counts.index, class_counts.values)
-        plt.xlabel('Class')
-        plt.ylabel('Count')
-        plt.title('Class Distribution')
-        st.pyplot()
-        
+        fig, ax = plt.subplots()
+        ax.bar(class_counts.index, class_counts.values)
+        ax.set_xlabel('Class')
+        ax.set_ylabel('Count')
+        ax.set_title('Class Distribution')
+        st.pyplot(fig)
+     
 #run the app
 if __name__ == "__main__":
     app()
